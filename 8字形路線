@@ -1,0 +1,111 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <SoftwareSerial.h>
+#include <MeMCore.h>
+
+int button=A7;
+
+MeBuzzer buzzer;
+MeRGBLed light(7,2);
+MeDCMotor left(9); 
+MeDCMotor right(10);
+
+void setup() {
+    buzzer.tone(659, 300);
+    buzzer.tone(523, 400);
+    delay(300);
+}
+
+void goright(){
+    left.run(-100);//向前
+    right.run(100);
+    delay(2000);
+
+
+    left.run(-100);//右轉
+    right.run(0);
+
+    light.setColor(2,0,0,0);//左燈號
+    light.setColor(1,153, 102, 204);//右燈號
+    light.show();
+
+    delay(1525);
+    left.run(0);
+    right.run(0);
+    light.setColor(2,240,128,128);//左燈號
+    light.setColor(1,153, 102, 204);//右燈號
+    light.show();
+}
+
+void goleft(){
+    left.run(-100);//向前
+    right.run(100);
+    delay(2000);
+
+
+    left.run(0);//左轉
+    right.run(100);
+
+    light.setColor(2,240,128,128);//左燈號
+    light.setColor(1,0,0,0);//右燈號
+    light.show();
+
+    delay(1475);
+
+    left.run(0);
+    right.run(0);
+    light.setColor(2,240,128,128);//左燈號
+    light.setColor(1,153, 102, 204);//右燈號
+    light.show();
+}
+
+void loop() {
+    light.fillPixelsBak(0,2,1);
+    if(analogRead(button)){
+        light.setColor(0,0,0,0);
+        light.show();
+    }
+    else{
+        light.setColor(2,240,128,128);//左燈號
+        light.setColor(1,153, 102, 204);//右燈號
+        light.show();
+
+        
+
+
+    pinMode(button,INPUT);
+    if(analogRead(button)){
+        
+        left.run(-100);//向前補正
+        right.run(100);
+        delay(700);
+        goright();
+
+        goleft();
+
+        left.run(-100);//向前補正
+        right.run(100);
+        delay(700);
+        goleft();
+
+        goleft();
+
+        left.run(-100);//向前補正
+        right.run(100);
+        delay(700);
+        goleft();
+
+        goright();
+
+        left.run(-100);//向前補正
+        right.run(100);
+        delay(700);
+        goright();
+
+        goright();
+    }
+
+    }
+
+}
+
